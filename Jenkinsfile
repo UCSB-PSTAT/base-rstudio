@@ -19,7 +19,9 @@ pipeline {
                         sh 'podman run -it --rm localhost/$IMAGE_NAME which rstudio'
                         sh 'podman run -it --rm localhost/$IMAGE_NAME R -e "library(\"usethis\");library(\"covr\");library(\"httr\");library(\"roxygen2\");library(\"rversions\");library(\"igraph\");library(\"imager\");library(\"patchwork\");library(\"littler\");library(\"docopt\");library(\"httr\");library(\"WDI\");library(\"faraway\");library(\"boot\");library(\"car\");library(\"pscl\");library(\"vcd\");library(\"stargazer\");library(\"effsize\");library(\"Rmisc\");library(\"tidyverse\")"'
                         sh 'podman run -d --name=$IMAGE_NAME --rm -p 8888:8888 localhost/$IMAGE_NAME start-notebook.sh --NotebookApp.token="jenkinstest"'
-                        sh 'sleep 10 && curl -L http://localhost:8888/rstudio&token=jenkinstest'
+                        sh 'sleep 10 && curl -v http://localhost:8888/rstudio?token=jenkinstest 2>&1 | grep -P ".*(404|500)\s+[\w\s]+\s*$" ; test $? -gt 0'
+                        sh 'curl -v http://localhost:8888/lab?token=jenkinstest 2>&1 | grep -P ".*(302|500)\s+Found\s*$" ; test $? -ne 0'
+                        sh 'curl -v http://localhost:8888/tree?token=jenkinstest 2>&1 | grep -P ".*(302|500)\s+Found\s*$" ; test $? -ne 0'
                     }
                     post {
                         always {
