@@ -5,6 +5,12 @@ Base image for launching RStudio via JupyterHub.  This based on the [Jupyter R u
 
 ## How to run
 
+The most basic way to demo this locally: 
+
+`podman -it -p8888:8888 ucsb/rstudio-base:latest`
+
+In the stdout, there will be a link that includes a token that will allow you to login locally with a browser.  To get to rstudio, visit the /rstudio path.
+
 Generally, refer to [upstream documentation](https://jupyter-docker-stacks.readthedocs.io/en/latest/) for running these containers, however, this container adds an additional /rstudio endpoint with the necessary [jupyter session proxy](https://github.com/jupyterhub/jupyter-rsession-proxy) layer, making it suitable to deploy via [JupyterHub helm chart](https://zero-to-jupyterhub.readthedocs.io/en/latest/) or as a standalone deployment.
 
 ## How to build an image from this
