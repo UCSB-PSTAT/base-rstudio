@@ -53,9 +53,9 @@ RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ d
 RUN pip install nbgitpuller && \
     jupyter serverextension enable --py nbgitpuller --sys-prefix 
     
-RUN mamba install -y -c conda-forge jupyter-server-proxy jupyter-rsession-proxy
+RUN mamba install -y -c conda-forge jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick r-rstan
 
-RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','igraph','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
+RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','igraph','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
 
 RUN R -e "devtools::install_github('bradleyboehmke/harrypotter')"
 
