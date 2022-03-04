@@ -25,6 +25,7 @@ RUN apt update -qq && \
         libssh2-1-dev \
 ## install git command line
         git \
+        git-lfs \
 ## install RStudio Server session components
         curl \
         libuser \
@@ -52,8 +53,11 @@ RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ d
 
 RUN pip install nbgitpuller && \
     jupyter serverextension enable --py nbgitpuller --sys-prefix 
+
+RUN cp /opt/conda/lib/python3.9/site-packages/nbgitpuller/templates/status.html /opt/conda/lib/python3.9/site-packages/notebook/templates/status.html && \
+    cp /opt/conda/lib/python3.9/site-packages/nbgitpuller/templates/status.html /opt/conda/share/jupyterhub/templates/status.html
     
-RUN mamba install -y -c conda-forge jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick r-rstan
+RUN mamba install -y -c conda-forge jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick r-rstan pandas numpy matplotlib
 
 RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','igraph','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
 
@@ -64,3 +68,5 @@ RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 RUN R -e "devtools::install_github('ucbds-infra/ottr@0.0.2')"
 
 USER $NB_USER
+
+RUN git lfs install
