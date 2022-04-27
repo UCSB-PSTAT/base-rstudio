@@ -42,6 +42,7 @@ RUN apt update -qq && \
         libnlopt-dev \
         libboost-all-dev \
     wget && \
+    R_STUDIO_VERSION=$(curl https://api.github.com/repos/rstudio/rstudio/tags 2>/dev/null | jq -r '.[0].name' | sed 's,+,-,g;s,v,,g') && \
     wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
     wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
     apt install ./rstudio*.deb -yq && apt-get clean && rm -f ./rstudio*.deb && \
