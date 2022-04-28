@@ -10,6 +10,7 @@ RUN apt update -qq && \
     apt upgrade -y && \
     apt install -y \
         software-properties-common \
+        jq \
         lsof \
         less \
         libapparmor1 \
