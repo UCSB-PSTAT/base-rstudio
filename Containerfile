@@ -53,9 +53,6 @@ RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ d
 
 RUN pip install nbgitpuller && \
     jupyter serverextension enable --py nbgitpuller --sys-prefix 
-
-RUN cp /opt/conda/lib/python3.9/site-packages/nbgitpuller/templates/status.html /opt/conda/lib/python3.9/site-packages/notebook/templates/status.html && \
-    cp /opt/conda/lib/python3.9/site-packages/nbgitpuller/templates/status.html /opt/conda/share/jupyterhub/templates/status.html
     
 RUN mamba install -y -c conda-forge jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick r-rstan pandas numpy matplotlib
 
