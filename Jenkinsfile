@@ -11,7 +11,7 @@ pipeline {
             stages{
                 stage('Build') {
                     steps {
-                        sh 'podman build -t $IMAGE_NAME --pull  --no-cache .'
+                        sh 'podman build -t localhost/$IMAGE_NAME --pull  --no-cache .'
                      }
                 }
                 stage('Test') {
