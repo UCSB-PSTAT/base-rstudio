@@ -4,7 +4,7 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2022.02.0-443
+ENV R_STUDIO_VERSION 2022.02.3-492
 
 RUN apt update -qq && \
     apt upgrade -y && \
