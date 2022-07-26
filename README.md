@@ -24,13 +24,13 @@ USER root
 
 # Add your changes here
 RUN mamba install ...
-
+RUN R -e "install.packages(c('<library>', '<library>'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
 USER $NB_USER
 ```
 
 ## Tags
 
-`latest` - Periodically a Jupyter release version is tagged in the Containerfile and this tags tracks the most recent build against that particular version.  That version may get updated at least quarterly.
+`latest` - Periodically a Jupyter release version is tagged in the Containerfile and this tags tracks the most recent build against that particular version.  That upstream version may get updated at least quarterly.  This image is built and tested at least weekly.
 
 `weekly` - This tag is primarily for integration testing and tracks the upstream `latest` tag.  These images are generally built, tested, and updated weekly on Monday mornings (PDT time).
 
