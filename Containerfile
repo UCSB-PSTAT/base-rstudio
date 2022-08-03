@@ -62,7 +62,7 @@ RUN R -e "devtools::install_github('bradleyboehmke/harrypotter')"
 
 RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
-RUN R -e "devtools::install_github('ucbds-infra/ottr@0.0.2')"
+RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 
 USER $NB_USER
 
