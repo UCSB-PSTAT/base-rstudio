@@ -11,6 +11,7 @@ pipeline {
             stages{
                 stage('Build') {
                     steps {
+			scmSkip(deleteBuild: true, skipPattern:'.*\\[ci skip\\].*')
                         sh 'podman build -t localhost/$IMAGE_NAME --pull  --no-cache .'
                      }
                 }
