@@ -4,9 +4,12 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2022.02.3-492
+ENV R_STUDIO_VERSION 2022.07.1-554
 
 RUN apt update -qq && \
+    apt install software-properties-common -y && \
+    add-apt-repository ppa:nrbrtx/libssl1 && \
+    apt update -qq && \
     apt upgrade -y && \
     apt install -y \
         software-properties-common \
@@ -23,16 +26,13 @@ RUN apt update -qq && \
         gfortran \
         libv8-dev \
         libssh2-1-dev \
-## install git command line
         git \
         git-lfs \
-## install RStudio Server session components
         curl \
         libuser \
         libuser1-dev \
         libpq-dev \
         rrdtool \  
-## install rstan build reqs
         build-essential \
         libxml2-dev \
         libcurl4-openssl-dev \
@@ -41,8 +41,10 @@ RUN apt update -qq && \
         cmake \
         libnlopt-dev \
         libboost-all-dev \
-    wget && \
-    wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
+        wget 
+
+## Install rstudio from source package
+RUN wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
     wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
     apt install ./rstudio*.deb -yq && apt-get clean && rm -f ./rstudio*.deb && \
     apt-get clean 
