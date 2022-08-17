@@ -1,10 +1,10 @@
-FROM jupyter/r-notebook:r-4.1.2
+FROM jupyter/r-notebook:r-4.1.3
 
 LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2022.02.0-443
+ENV R_STUDIO_VERSION 2022.07.1-554
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
