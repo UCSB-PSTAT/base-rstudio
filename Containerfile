@@ -7,9 +7,10 @@ USER root
 ENV R_STUDIO_VERSION 2022.02.0-443
 
 RUN apt update -qq && \
+    apt install software-properties-common -y && \
+    add-apt-repository ppa:nrbrtx/libssl1 && \
     apt upgrade -y && \
     apt install -y \
-        software-properties-common \
         jq \
         lsof \
         less \
