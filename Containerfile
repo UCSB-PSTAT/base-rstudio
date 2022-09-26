@@ -67,8 +67,8 @@ RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
 RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 
-USER $NB_USER
-
 RUN /usr/local/bin/fix-permissions
+
+USER $NB_USER
 
 RUN git lfs install
