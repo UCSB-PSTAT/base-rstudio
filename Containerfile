@@ -41,7 +41,8 @@ RUN apt update -qq && \
         cmake \
         libnlopt-dev \
         libboost-all-dev \
-        wget 
+        wget \
+        lmodern
 
 ## Install rstudio from source package
 RUN wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
@@ -66,6 +67,8 @@ RUN R -e "devtools::install_github('bradleyboehmke/harrypotter')"
 RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
 RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
+
+RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 USER $NB_USER
 
