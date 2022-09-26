@@ -69,4 +69,6 @@ RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 
 USER $NB_USER
 
+RUN /usr/local/bin/fix-permissions
+
 RUN git lfs install
