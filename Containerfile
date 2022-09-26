@@ -67,7 +67,7 @@ RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
 RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 
-RUN /usr/local/bin/fix-permissions
+RUN /usr/local/bin/fix-permissions "${CONDA_DIR}"
 
 USER $NB_USER
 
