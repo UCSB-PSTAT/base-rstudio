@@ -67,6 +67,8 @@ RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
 RUN R -e "devtools::install_github('ucbds-infra/ottr@0.0.2')"
 
+RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
+
 USER $NB_USER
 
 RUN git lfs install
