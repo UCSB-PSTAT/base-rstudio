@@ -41,7 +41,8 @@ RUN apt update -qq && \
         cmake \
         libnlopt-dev \
         libboost-all-dev \
-        wget 
+        wget \
+        lmodern
 
 ## Install rstudio from source package
 RUN wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
