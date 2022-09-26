@@ -12,7 +12,7 @@ pipeline {
             stages{
                 stage('Build') {
                     steps {
-                        sh 'podman build -t localhost/$IMAGE_NAME --pull  --no-cache .'
+                        sh 'podman build -t localhost/$IMAGE_NAME --rm --pull  --no-cache .'
                      }
                 }
                 stage('Test') {
