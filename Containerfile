@@ -1,3 +1,4 @@
+
 FROM jupyter/r-notebook:r-4.2.1
 
 LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
@@ -6,13 +7,14 @@ USER root
 
 ENV R_STUDIO_VERSION 2022.07.2-576
 
+
 RUN apt update -qq && \
     apt install software-properties-common -y && \
     add-apt-repository ppa:nrbrtx/libssl1 && \
     apt update -qq && \
     apt upgrade -y && \
     apt install -y \
-        software-properties-common \
+        jq \
         lsof \
         less \
         libapparmor1 \
@@ -69,6 +71,8 @@ RUN R -e "devtools::install_github('bradleyboehmke/harrypotter')"
 RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
 RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
+
+RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
