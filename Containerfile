@@ -1,14 +1,16 @@
 FROM jupyter/r-notebook:latest
 
+
 LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2022.12.0-353
+## ENV R_STUDIO_VERSION 2022.12.0-353
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
     add-apt-repository ppa:nrbrtx/libssl1 && \
+    apt update -qq && \
     apt upgrade -y && \
     apt install -y \
         jq \
@@ -25,16 +27,13 @@ RUN apt update -qq && \
         gfortran \
         libv8-dev \
         libssh2-1-dev \
-## install git command line
         git \
         git-lfs \
-## install RStudio Server session components
         curl \
         libuser \
         libuser1-dev \
         libpq-dev \
         rrdtool \  
-## install rstan build reqs
         build-essential \
         libxml2-dev \
         libcurl4-openssl-dev \
@@ -43,7 +42,10 @@ RUN apt update -qq && \
         cmake \
         libnlopt-dev \
         libboost-all-dev \
-    wget && \
+        wget \
+        lmodern && \
+
+## Install rstudio from source package
     R_STUDIO_VERSION=$(curl https://api.github.com/repos/rstudio/rstudio/tags 2>/dev/null | jq -r '.[0].name' | sed 's,+,-,g;s,v,,g') && \
     wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
     wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
@@ -57,7 +59,10 @@ RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ d
 RUN pip install nbgitpuller && \
     jupyter serverextension enable --py nbgitpuller --sys-prefix 
 
-RUN mamba install -y -c conda-forge --freeze-installed jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick pandas numpy
+RUN mamba install -y -c conda-forge libwebp
+
+RUN mamba install -y -c conda-forge --freeze-installed jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick pandas numpy && \
+    mamba clean --all
 
 RUN pip install matplotlib
 
@@ -67,7 +72,9 @@ RUN R -e "devtools::install_github('bradleyboehmke/harrypotter')"
 
 RUN R -e "devtools::install_github('gbm-developers/gbm3')"
 
-RUN R -e "devtools::install_github('ucbds-infra/ottr@0.0.2')"
+RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
+
+RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
