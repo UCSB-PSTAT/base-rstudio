@@ -1,5 +1,4 @@
-FROM jupyter/r-notebook:latest
-
+FROM jupyter/r-notebook:r-4.3.1
 
 LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
