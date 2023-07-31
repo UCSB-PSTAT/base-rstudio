@@ -4,7 +4,7 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-## ENV R_STUDIO_VERSION 2022.12.0-353
+ENV R_STUDIO_VERSION 2023.06.1-524
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
@@ -45,7 +45,6 @@ RUN apt update -qq && \
         lmodern && \
 
 ## Install rstudio from source package
-    R_STUDIO_VERSION=$(curl https://api.github.com/repos/rstudio/rstudio/tags 2>/dev/null | jq -r '.[0].name' | sed 's,+,-,g;s,v,,g') && \
     wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
     wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
     apt install ./rstudio*.deb -yq && apt-get clean && rm -f ./rstudio*.deb && \
