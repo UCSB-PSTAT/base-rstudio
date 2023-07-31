@@ -43,6 +43,7 @@ RUN apt update -qq && \
         libboost-all-dev \
         wget \
         lmodern && \
+        apt-get clean
 
 ## Install rstudio from source package
 RUN wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
