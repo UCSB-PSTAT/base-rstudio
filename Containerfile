@@ -78,7 +78,7 @@ RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 RUN /usr/local/bin/fix-permissions /home/joyvan || true
 
-RUN echo 'c.Spawner.default_url = /lab' >> /etc/jupyter/jupyter_server_config.py
+RUN echo 'c.Spawner.default_url = "/lab"' >> /etc/jupyter/jupyter_server_config.py
 
 USER $NB_USER
 
