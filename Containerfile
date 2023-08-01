@@ -5,8 +5,6 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV JUPYTERHUB_SINGLEUSER_APP jupyter_server.serverapp.ServerApp
-
 ## ENV R_STUDIO_VERSION 2022.12.0-353
 
 RUN apt update -qq && \
@@ -78,7 +76,9 @@ RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
-RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
+RUN /usr/local/bin/fix-permissions /home/joyvan || true
+
+RUN echo 'c.Spawner.default_url = /lab' >> /etc/jupyter/jupyter_server_config.py
 
 USER $NB_USER
 
