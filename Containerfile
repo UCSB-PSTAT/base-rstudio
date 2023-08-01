@@ -5,6 +5,8 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
+ENV JUPYTERHUB_SINGLEUSER_APP jupyter_server.serverapp.ServerApp
+
 ## ENV R_STUDIO_VERSION 2022.12.0-353
 
 RUN apt update -qq && \
