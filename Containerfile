@@ -7,6 +7,8 @@ USER root
 
 ## ENV R_STUDIO_VERSION 2022.12.0-353
 
+ENV JUPYTERHUB_SINGLEUSER_EXTENSION 0
+
 RUN apt update -qq && \
     apt install software-properties-common -y && \
     add-apt-repository ppa:nrbrtx/libssl1 && \
