@@ -58,6 +58,8 @@ RUN chmod 777 /var/run/rstudio-server && chmod +t /var/run/rstudio-server
 
 RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"
 
+RUN sed -i 's,return self.redirect(self.base_url + "tree"),return self.redirect(self.base_url.strip("/") + "/" + self.default_url.strip("/")),g' /opt/conda/lib/python3.11/site-packages/notebook/app.py
+
 RUN pip install nbgitpuller && \
     jupyter server extension enable --py nbgitpuller --sys-prefix 
 
