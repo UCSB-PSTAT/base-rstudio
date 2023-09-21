@@ -5,9 +5,7 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-## ENV R_STUDIO_VERSION 2022.12.0-353
-
-ENV JUPYTERHUB_SINGLEUSER_EXTENSION 0
+## ENV R_STUDIO_VERSION 2023.06.1-524
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
