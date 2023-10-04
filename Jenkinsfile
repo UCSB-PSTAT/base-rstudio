@@ -1,6 +1,6 @@
 pipeline {
     agent none
-    triggers { cron('H H(0-6) * * 1') }
+    triggers { cron('H H(0-2) * * 1') }
     environment {
         IMAGE_NAME = 'rstudio-base'
     }
