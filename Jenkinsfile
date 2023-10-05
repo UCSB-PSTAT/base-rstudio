@@ -1,6 +1,6 @@
 pipeline {
     agent none
-    triggers { cron('H H(0-6) * * 1') }
+    triggers { cron('H H(0-2) * * 1') }
     environment {
         IMAGE_NAME = 'rstudio-base'
     }
@@ -12,7 +12,12 @@ pipeline {
             stages{
                 stage('Build') {
                     steps {
-			echo "NODE_NAME = ${env.NODE_NAME}"
+                        script {
+                            if (currentBuild.getBuildCauses('com.cloudbees.jenkins.GitHubPushCause').size() || currentBuild.getBuildCauses('jenkins.branch.BranchIndexingCause').size()) {
+                               scmSkip(deleteBuild: true, skipPattern:'.*\\[ci skip\\].*')
+                            }
+                        }
+                        echo "NODE_NAME = ${env.NODE_NAME}"
                         sh 'podman build -t localhost/$IMAGE_NAME --pull --force-rm --no-cache .'
                      }
                 }
@@ -40,8 +45,13 @@ pipeline {
                         DOCKER_HUB_CREDS = credentials('DockerHubToken')
                     }
                     steps {
-			sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:latest --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
+                        sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:latest --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
                         sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:v$(date "+%Y%m%d") --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
+                    }
+                    post {
+                        always {
+                            sh 'podman rmi -i $IMAGE_NAME || true'
+                        }
                     }
                 }                
             }
