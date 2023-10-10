@@ -50,6 +50,11 @@ pipeline {
                     }
                 }                
             }
+            post {
+                always {
+                    sh 'podman rmi -i localhost/$IMAGE_NAME || true'
+                }
+            }
         }
     }
     post {
@@ -59,8 +64,4 @@ pipeline {
         failure {
             slackSend(channel: '#infrastructure-build', username: 'jenkins', color: 'danger', message: "Uh Oh! Build ${env.JOB_NAME} ${env.BUILD_NUMBER} had a failure! (<${env.BUILD_URL}|Find out why>).")
         }
-        always {
-            sh 'podman rmi -i localhost/$IMAGE_NAME || true'
-        }
-    }
 }
