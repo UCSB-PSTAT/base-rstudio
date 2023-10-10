@@ -12,6 +12,11 @@ pipeline {
             stages{
                 stage('Build') {
                     steps {
+                        script {
+                            if (currentBuild.getBuildCauses('com.cloudbees.jenkins.GitHubPushCause').size() || currentBuild.getBuildCauses('jenkins.branch.BranchIndexingCause').size()) {
+                               scmSkip(deleteBuild: true, skipPattern:'.*\\[ci skip\\].*')
+                            }
+                        }
                         echo "NODE_NAME = ${env.NODE_NAME}"
                         sh 'podman build -t localhost/$IMAGE_NAME --pull --force-rm --no-cache --from="jupyter/r-notebook:latest" .'
                      }
@@ -52,6 +57,9 @@ pipeline {
         }
         failure {
             slackSend(channel: '#infrastructure-build', username: 'jenkins', message: "Uh Oh! Build ${env.JOB_NAME} ${env.BUILD_NUMBER} had a failure! (<${env.BUILD_URL}|Find out why>).")
+        }
+        always {
+            sh 'podman rmi -i localhost/$IMAGE_NAME || true'
         }
     }
 }
