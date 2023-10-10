@@ -48,11 +48,6 @@ pipeline {
                         sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:latest --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
                         sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:v$(date "+%Y%m%d") --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
                     }
-                    post {
-                        always {
-                            sh 'podman rmi -i $IMAGE_NAME || true'
-                        }
-                    }
                 }                
             }
         }
@@ -63,6 +58,9 @@ pipeline {
         }
         failure {
             slackSend(channel: '#infrastructure-build', username: 'jenkins', color: 'danger', message: "Uh Oh! Build ${env.JOB_NAME} ${env.BUILD_NUMBER} had a failure! (<${env.BUILD_URL}|Find out why>).")
+        }
+        always {
+            sh 'podman rmi -i localhost/$IMAGE_NAME || true'
         }
     }
 }
