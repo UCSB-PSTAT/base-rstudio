@@ -63,6 +63,11 @@ pipeline {
                     }
                 }
             }
+            post {
+                always {
+                    sh 'podman rmi -i localhost/$IMAGE_NAME || true'
+                }
+            }
         }
     }
     post {
