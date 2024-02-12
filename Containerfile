@@ -25,6 +25,7 @@ RUN apt update -qq && \
         libclang-dev \
         gfortran \
         libglpk-dev \
+        libxml2-dev \
         libv8-dev \
         libssh2-1-dev \
         git \
