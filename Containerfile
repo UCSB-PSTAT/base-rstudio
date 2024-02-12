@@ -54,7 +54,7 @@ RUN wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_V
 
 RUN chmod 777 /var/run/rstudio-server && chmod +t /var/run/rstudio-server
 
-RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function -I/usr/include', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', 'FC = /usr/bin/gfortran', file = Makevars, sep = '\n', append = TRUE)"
+RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function -I/usr/include', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', 'CC = gcc','FC = /usr/bin/gfortran', file = Makevars, sep = '\n', append = TRUE)"
 
 RUN pip install nbgitpuller && \
     jupyter server extension enable --py nbgitpuller --sys-prefix 
