@@ -24,6 +24,7 @@ RUN apt update -qq && \
         psmisc \
         libclang-dev \
         gfortran \
+        libglpk-dev \
         libv8-dev \
         libssh2-1-dev \
         git \
