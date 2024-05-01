@@ -4,7 +4,7 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2023.12.0-369
+ENV R_STUDIO_VERSION 2024.04.0-735
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
