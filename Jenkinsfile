@@ -8,6 +8,9 @@ pipeline {
         stage('Build Test Deploy') {
             agent {
                 label 'jupyter'
+                kubernetes {
+                    inheritFrom 'podman'
+                }
             }
             stages{
                 stage('Build') {
