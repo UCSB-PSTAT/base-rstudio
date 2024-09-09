@@ -10,7 +10,6 @@ pipeline {
                 kubernetes {
                     cloud 'rke-test'
                     inheritFrom 'podman'
-                    label 'jupyter'
                 }
             }
             stages{
