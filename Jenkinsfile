@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent nonde
     triggers { cron('H H(0-2) * * 1') }
     environment {
         IMAGE_NAME = 'rstudio-base'
@@ -7,7 +7,6 @@ pipeline {
     stages {
         stage('Build Test Deploy') {
             agent {
-                label 'jupyter'
                 kubernetes {
                     cloud 'rke-test'
                     inheritFrom 'podman'
