@@ -22,7 +22,7 @@ pipeline {
                         }
                         echo "NODE_NAME = ${env.NODE_NAME}"
                         container('podman') {
-                            sh 'podman build -t localhost/$IMAGE_NAME --pull --force-rm --no-cache --from="jupyter/r-notebook:latest" .'
+                            sh 'podman build -t localhost/$IMAGE_NAME --pull --force-rm --no-cache --from="quay.io/jupyter/r-notebook:latest" .'
                         }
                      }
                     post {
