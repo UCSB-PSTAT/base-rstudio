@@ -1,4 +1,4 @@
-FROM quay.io/jupyter/r-notebook:r-4.3.3
+FROM quay.io/jupyter/r-notebook:r-4.4.1
 
 LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
