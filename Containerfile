@@ -58,10 +58,10 @@ RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ d
 RUN pip install nbgitpuller && \
     jupyter server extension enable --py nbgitpuller --sys-prefix 
 
-RUN mamba install -y -c conda-forge libwebp
+RUN conda install -y -c conda-forge libwebp
 
-RUN mamba install -y -c conda-forge --freeze-installed jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick pandas numpy r-igraph && \
-    mamba clean --all
+RUN conda install -y -c conda-forge --freeze-installed jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick pandas numpy r-igraph && \
+    conda clean --all
 
 # Add the conda lib path for RStudio
 RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf
