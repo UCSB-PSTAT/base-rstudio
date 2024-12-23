@@ -78,7 +78,7 @@ RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
-RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
+RUN chown -R jovyan:users /home/jovyan
 
 USER $NB_USER
 
