@@ -42,7 +42,7 @@ RUN apt update -qq && \
         libnlopt-dev \
         libboost-all-dev \
         wget \
-        lmodern && \ 
+        lmodern && \
         apt-get clean
 
 ## Install rstudio from source package
