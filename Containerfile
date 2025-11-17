@@ -46,8 +46,8 @@ RUN apt update -qq && \
         apt-get clean
 
 ## Install rstudio from source package
-RUN wget https://download1.rstudio.org/electron/noble/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
-    wget https://download2.rstudio.org/server/noble/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
+RUN wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
     apt install ./rstudio*.deb -yq && apt-get clean && rm -f ./rstudio*.deb && \
     apt-get clean 
 
