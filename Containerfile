@@ -1,10 +1,10 @@
-FROM quay.io/jupyter/r-notebook:r-4.4.3
+FROM quay.io/jupyter/r-notebook:r-4.5.2
 
 LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2025.09.0-387
+ENV R_STUDIO_VERSION 2025.09.2-418
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
