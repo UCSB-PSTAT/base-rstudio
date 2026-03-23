@@ -68,13 +68,13 @@ RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf
 
 RUN pip install matplotlib
 
-RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
+RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan', 'pak'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
 
-RUN R -e "devtools::install_github('bradleyboehmke/harrypotter')"
+RUN R -e "pak::pak('bradleyboehmke/harrypotter')"
 
-RUN R -e "devtools::install_github('gbm-developers/gbm3')"
+RUN R -e "pak::pak('gbm-developers/gbm3')"
 
-RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
+RUN R -e "pak::pak('ucbds-infra/ottr@stable')"
 
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
