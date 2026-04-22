@@ -66,7 +66,7 @@ RUN conda install -y -c conda-forge --freeze-installed jupyter-server-proxy jupy
 # Add the conda lib path for RStudio
 RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf
 
-RUN pip install matplotlib
+RUN pip install matplotlib openai "jupyter-ai[all]<3.0.0"
 
 RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan', 'pak', 'ottr'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
 
@@ -77,6 +77,8 @@ RUN R -e "pak::pak('gbm-developers/gbm3')"
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 RUN chown -R jovyan:users /home/jovyan
+
+ENV OPENAI_API_KEY="sk-placeholder-key"
 
 USER $NB_USER
 
