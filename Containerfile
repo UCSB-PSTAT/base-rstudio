@@ -66,7 +66,7 @@ RUN mamba install -y -c conda-forge jupyter-server-proxy jupyter-rsession-proxy 
     mamba install -y -c conda-forge imagemagick && \
     mamba clean --all
 
-RUN pip install matplotlib
+RUN pip install matplotlib openai "jupyter-ai[all]<3.0.0"
 
 RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
 
@@ -79,6 +79,8 @@ RUN R -e "devtools::install_github('ucbds-infra/ottr@stable')"
 RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 RUN /usr/local/bin/fix-permissions /home/joyvan || true
+
+ENV OPENAI_API_KEY="sk-placeholder-key"
 
 USER $NB_USER
 
