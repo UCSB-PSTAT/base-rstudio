@@ -63,7 +63,7 @@ pipeline {
                     }
                 }
                 stage('Deploy') {
-                    //when { branch 'main' }
+                    when { branch 'main' }
                     environment {
                         DOCKER_HUB_CREDS = credentials('harbor-registry-token')
                     }
