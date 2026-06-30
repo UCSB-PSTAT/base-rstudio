@@ -3,6 +3,7 @@ pipeline {
     triggers { cron('H H(0-2) * * 1') }
     environment {
         IMAGE_NAME = 'rstudio-base'
+        CONTAINER_REGISTRY  = 'registry.cloud.college.ucsb.edu'
     }
     stages {
         stage('Build Test Deploy') {
@@ -38,7 +39,7 @@ pipeline {
                         container('podman') {                    
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME which rstudio'
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME find /usr/share -type f -name lmodern.sty'
-                            sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME R -q -e "getRversion() >= \\"4.5.2\\"" | tee /dev/stderr | grep -q "TRUE"'
+                            sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME R -q -e "getRversion() >= \\"4.5.3\\"" | tee /dev/stderr | grep -q "TRUE"'
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME R -e "library(\"usethis\");library(\"covr\");library(\"httr\");library(\"roxygen2\");library(\"rversions\");library(\"igraph\");library(\"imager\");library(\"patchwork\");library(\"littler\");library(\"docopt\");library(\"httr\");library(\"WDI\");library(\"faraway\");library(\"boot\");library(\"car\");library(\"pscl\");library(\"vcd\");library(\"stargazer\");library(\"effsize\");library(\"Rmisc\");library(\"tidyverse\");library(\"rstan\");library(\"brms\")"'
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME pip install otter-grader'
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME jupyter labextension list | grep "@jupyter-ai" | grep "@jupyter-ai.*enabled.*OK"'
@@ -64,12 +65,12 @@ pipeline {
                 stage('Deploy') {
                     when { branch 'main' }
                     environment {
-                        DOCKER_HUB_CREDS = credentials('DockerHubToken')
+                        DOCKER_HUB_CREDS = credentials('harbor-registry-token')
                     }
                     steps {
                         container('podman') {
-                            sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:latest --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
-                            sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:v$(date "+%Y%m%d") --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
+                            sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://$CONTAINER_REGISTRY/ucsb/$IMAGE_NAME:latest --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
+                            sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://$CONTAINER_REGISTRY/ucsb/$IMAGE_NAME:v$(date "+%Y%m%d") --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
                         }
                     }
                     post {
