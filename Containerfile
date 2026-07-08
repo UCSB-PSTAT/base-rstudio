@@ -5,10 +5,11 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 USER root
 
 # Rstudio crashes on 2026.05.1 and 2026.06.0 -Kinji, Wed Jul  8 04:24:42 PM PDT 2026
+# but these commented previous versiosn work -- see pip install from git for rsession-proxy
 #ENV R_STUDIO_VERSION 2026.01.2-418
-ENV R_STUDIO_VERSION 2026.04.0-526
+#ENV R_STUDIO_VERSION 2026.04.0-526
 #ENV R_STUDIO_VERSION 2026.05.1-225
-#ENV R_STUDIO_VERSION 2026.06.0-242
+ENV R_STUDIO_VERSION 2026.06.0-242
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
@@ -64,8 +65,11 @@ RUN pip install nbgitpuller && \
 
 RUN conda install -y -c conda-forge libwebp
 
-RUN conda install -y -c conda-forge --freeze-installed jupyter-server-proxy jupyter-rsession-proxy udunits2 imagemagick pandas numpy r-igraph && \
+RUN conda install -y -c conda-forge --freeze-installed jupyter-server-proxy udunits2 imagemagick pandas numpy r-igraph && \
     conda clean --all
+
+# hack to avoid Rstudio crash introduced in 202605 Rstudio -Kinji Wed Jul  8 04:33:16 PM PDT 2026
+RUN pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@main
 
 # Add the conda lib path for RStudio
 RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf
