@@ -4,7 +4,11 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2026.06.0-242
+# Rstudio crashes on 2026.05.1 and 2026.06.0 -Kinji, Wed Jul  8 04:24:42 PM PDT 2026
+#ENV R_STUDIO_VERSION 2026.01.2-418
+ENV R_STUDIO_VERSION 2026.04.0-526
+#ENV R_STUDIO_VERSION 2026.05.1-225
+#ENV R_STUDIO_VERSION 2026.06.0-242
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
