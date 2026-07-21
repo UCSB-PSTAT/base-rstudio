@@ -3,6 +3,7 @@ pipeline {
     triggers { cron('H H(0-6) * * 1') }
     environment {
         IMAGE_NAME = 'rstudio-base'
+        CONTAINER_REGISTRY  = 'registry.cloud.college.ucsb.edu'
     }
     stages {
         stage('Build Test Deploy') {
