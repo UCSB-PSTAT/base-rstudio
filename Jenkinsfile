@@ -64,11 +64,11 @@ pipeline {
                 stage('Deploy') {
                     when { branch 'int-test' }
                     environment {
-                        DOCKER_HUB_CREDS = credentials('DockerHubToken')
+                        DOCKER_HUB_CREDS = credentials('harbor-registry-token')
                     }
                     steps {
                         container('podman') {
-                            sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://docker.io/ucsb/$IMAGE_NAME:weekly --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
+                            sh 'skopeo copy containers-storage:localhost/$IMAGE_NAME docker://$CONTAINER_REGISTRY/ucsb/$IMAGE_NAME:weekly --dest-username $DOCKER_HUB_CREDS_USR --dest-password $DOCKER_HUB_CREDS_PSW'
                         }
                     }
                     post {
