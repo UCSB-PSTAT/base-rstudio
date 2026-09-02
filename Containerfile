@@ -11,7 +11,7 @@ USER root
 #ENV R_STUDIO_VERSION 2026.05.1-225
 ENV R_STUDIO_VERSION 2026.06.0-242
 
-RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g'
+RUN sed -i /etc/apt/sources.list.d/ubuntu.sources 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g'
 
 RUN apt update -qq && \
     apt install software-properties-common -y && \
