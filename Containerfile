@@ -74,7 +74,7 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     r-pak &&\
     conda clean -afy &&\
     jupyter server extension enable --py nbgitpuller --sys-prefix &&\
-    Rscript -e "pak::pak(c('brms', 'boot', 'car', 'covr', 'docopt', 'effsize', 'faraway', 'httr', 'igraph', 'imager', 'littler', 'ottr', 'patchwork', 'pscl', 'rmisc', 'roxygen2', 'rstan', 'rversions', 'stargazer', 'tidyverse', 'usethis', 'vcd', 'WDI'))" &&\
+    Rscript -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan', 'ottr'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())" &&\
     Rscript -e "pak::pak(c('bradleyboehmke/harrypotter', 'gbm-developers/gbm3'))" &&\
     Rscript -e "pak::cache_clean()" &&\
     rm -rf ~/.cache/R /root/.cache/R /tmp/Rtmp* &&\
