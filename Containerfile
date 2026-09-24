@@ -4,63 +4,60 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-# Rstudio crashes on 2026.05.1 and 2026.06.0 -Kinji, Wed Jul  8 04:24:42 PM PDT 2026
-# but these commented previous versiosn work -- see pip install from git for rsession-proxy
-#ENV R_STUDIO_VERSION 2026.01.2-418
-#ENV R_STUDIO_VERSION 2026.04.0-526
-#ENV R_STUDIO_VERSION 2026.05.1-225
 ENV R_STUDIO_VERSION 2026.06.0-242
 
-RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g' /etc/apt/sources.list.d/ubuntu.sources
-
-RUN apt update -qq && \
-    apt install software-properties-common -y && \
-    apt update -qq && \
-    apt upgrade -y && \
+# System installs and configs
+RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g' /etc/apt/sources.list.d/ubuntu.sources &&\
+    apt update -qq &&\
+    apt install software-properties-common -y &&\
+    apt upgrade -y &&\
     apt install -y \
-        jq \
-        lsof \
-        less \
-        libapparmor1 \
-        libtiff5-dev \
-        libfftw3-dev \
-        libcairo2-dev \
-        libx11-dev \
-        x11-utils \
-        psmisc \
-        libclang-dev \
-        gfortran \
-        libglpk-dev \
-        libv8-dev \
-        libssh2-1-dev \
-        git \
-        git-lfs \
-        curl \
-        libuser \
-        libuser1-dev \
-        libpq-dev \
-        rrdtool \  
-        build-essential \
-        libxml2-dev \
-        libcurl4-openssl-dev \
-        libssl-dev \
-        build-essential \
-        cmake \
-        libnlopt-dev \
-        libboost-all-dev \
-        wget \
-        lmodern && \
-        apt-get clean
-
-## Install rstudio from source package
-RUN wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
-    apt install ./rstudio*.deb -yq && apt-get clean && rm -f ./rstudio*.deb && \
-    apt-get clean 
-
-RUN chmod 777 /var/run/rstudio-server && chmod +t /var/run/rstudio-server
-
-RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', 'CC = gcc','FC = /usr/bin/gfortran', file = Makevars, sep = '\n', append = TRUE)"
+    build-essential\
+    cmake\
+    curl\
+    gfortran\
+    git\
+    git-lfs\
+    jq\
+    less\
+    libapparmor1\
+    libboost-all-dev\
+    libcairo2-dev\
+    libclang-dev\
+    libcurl4-openssl-dev\
+    libfftw3-dev\
+    libglpk-dev\
+    libnlopt-dev\
+    libpq-dev\
+    libssh2-1-dev\
+    libssl-dev\
+    libtiff5-dev\
+    libuser\
+    libuser1-dev\
+    libv8-dev\
+    libx11-dev\
+    libxml2-dev\
+    lmodern\
+    lsof\
+    psmisc\
+    rrdtool\
+    software-properties-common\
+    wget\
+    x11-utils &&\
+    ## Install/Config RStudio from source package
+    wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb &&\
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb &&\
+    apt install ./rstudio*.deb -yq &&\
+    rm -f ./rstudio*.deb &&\
+    chmod 777 /var/run/rstudio-server &&\
+    chmod +t /var/run/rstudio-server &&\
+    echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf &&\
+    apt-get clean &&\
+    ## Configure git lfs and R for all system users
+    git config --system filter.lfs.clean "git-lfs clean -- %filter-replica" && \
+    git config --system filter.lfs.smudge "git-lfs smudge -- %filter-replica" && \
+    git config --system filter.lfs.process "git-lfs filter-process" &&\
+    Rscript -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', 'CC = gcc','FC = /usr/bin/gfortran', file = Makevars, sep = '\n', append = TRUE)"
 
 RUN pip install nbgitpuller && \
     jupyter server extension enable --py nbgitpuller --sys-prefix 
@@ -74,7 +71,6 @@ RUN conda install -y -c conda-forge --freeze-installed jupyter-server-proxy udun
 RUN pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@main
 
 # Add the conda lib path for RStudio
-RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf
 
 RUN pip install matplotlib openai "jupyter-ai[all]<3.0.0"
 
@@ -89,5 +85,3 @@ RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 RUN chown -R jovyan:users /home/jovyan
 
 USER $NB_USER
-
-RUN git lfs install
