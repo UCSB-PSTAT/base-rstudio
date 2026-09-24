@@ -71,34 +71,11 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     openai\
     pandas\
     udunits2\
-    r-brms\
-    r-boot\
-    r-car\
-    r-covr\
-    r-docopt\
-    r-effsize\
-    r-httr\
-    r-igraph\
-    r-imager\
-    r-littler\
-    r-ottr\
-    r-pak\
-    r-patchwork\
-    r-pscl\
-    r-rmisc\
-    r-roxygen2\
-    r-rstan\
-    r-rversions\
-    r-stargazer\
-    r-tidyverse\
-    r-usethis\
-    r-vcd\
-    r-wdi &&\
+    r-pak &&\
     conda clean -afy &&\
     jupyter server extension enable --py nbgitpuller --sys-prefix &&\
-    Rscript -e "install.packages(c('faraway'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())" &&\
-    Rscript -e "pak::pak('bradleyboehmke/harrypotter')" &&\
-    Rscript -e "pak::pak('gbm-developers/gbm3')" &&\
+    Rscript -e "pak::pak(c('brms', 'boot', 'car', 'covr', 'docopt', 'effsize', 'faraway', 'httr', 'igraph', 'imager', 'littler', 'ottr', 'patchwork', 'pscl', 'rmisc', 'roxygen2', 'rstan', 'rversions', 'stargazer', 'tidyverse', 'usethis', 'vcd', 'WDI'))" &&\
+    Rscript -e "pak::pak(c('bradleyboehmke/harrypotter', 'gbm-developers/gbm3'))" &&\
     Rscript -e "pak::cache_clean()" &&\
     rm -rf ~/.cache/R /root/.cache/R /tmp/Rtmp* &&\
     chown -R $NB_USER:$NB_GID /home/jovyan &&\
