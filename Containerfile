@@ -9,7 +9,6 @@ ENV R_STUDIO_VERSION 2026.06.0-242
 # System installs and configs
 RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g' /etc/apt/sources.list.d/ubuntu.sources &&\
     apt update -qq &&\
-    apt install software-properties-common -y &&\
     apt upgrade -y &&\
     apt install -y \
     build-essential\
@@ -59,29 +58,48 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
     git config --system filter.lfs.process "git-lfs filter-process" &&\
     Rscript -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', 'CC = gcc','FC = /usr/bin/gfortran', file = Makevars, sep = '\n', append = TRUE)"
 
-RUN pip install nbgitpuller && \
-    jupyter server extension enable --py nbgitpuller --sys-prefix 
-
-RUN conda install -y -c conda-forge libwebp
-
-RUN conda install -y -c conda-forge --freeze-installed jupyter-server-proxy udunits2 imagemagick pandas numpy r-igraph && \
-    conda clean --all
-
-# hack to avoid Rstudio crash introduced in 202605 Rstudio -Kinji Wed Jul  8 04:33:16 PM PDT 2026
-RUN pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@main
-
-# Add the conda lib path for RStudio
-
-RUN pip install matplotlib openai "jupyter-ai[all]<3.0.0"
-
-RUN R -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan', 'pak', 'ottr'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())"
-
-RUN R -e "pak::pak('bradleyboehmke/harrypotter')"
-
-RUN R -e "pak::pak('gbm-developers/gbm3')"
-
-RUN /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
-
-RUN chown -R jovyan:users /home/jovyan
+# Consolidate Conda Installations (Python + R Packages)
+RUN mamba install -y -c conda-forge --freeze-installed \
+    imagemagick\
+    "jupyter-ai=2.*"\
+    jupyter-rsession-proxy\
+    jupyter-server-proxy\
+    libwebp\
+    matplotlib\
+    nbgitpuller\
+    numpy\
+    openai\
+    pandas\
+    udunits2\
+    r-brms\
+    r-boot\
+    r-car\
+    r-covr\
+    r-docopt\
+    r-effsize\
+    r-faraway\
+    r-httr\
+    r-igraph\
+    r-imager\
+    r-littler\
+    r-ottr\
+    r-pak\
+    r-patchwork\
+    r-pscl\
+    r-rmisc\
+    r-roxygen2\
+    r-rstan\
+    r-rversions\
+    r-stargazer\
+    r-tidyverse\
+    r-usethis\
+    r-vcd\
+    r-wdi &&\
+    conda clean -afy &&\
+    jupyter server extension enable --py nbgitpuller --sys-prefix &&\
+    Rscript -e "pak::pak('bradleyboehmke/harrypotter')" &&\
+    Rscript -e "pak::pak('gbm-developers/gbm3')" &&\
+    chown -R $NB_USER:$NB_GID /home/jovyan &&\
+    /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
 USER $NB_USER
