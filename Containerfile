@@ -77,7 +77,6 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     r-covr\
     r-docopt\
     r-effsize\
-    r-faraway\
     r-httr\
     r-igraph\
     r-imager\
@@ -97,8 +96,11 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     r-wdi &&\
     conda clean -afy &&\
     jupyter server extension enable --py nbgitpuller --sys-prefix &&\
+    Rscript -e "install.packages(c('faraway'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())" &&\
     Rscript -e "pak::pak('bradleyboehmke/harrypotter')" &&\
     Rscript -e "pak::pak('gbm-developers/gbm3')" &&\
+    Rscript -e "pak::cache_clean()" &&\
+    rm -rf ~/.cache/R /root/.cache/R /tmp/Rtmp* &&\
     chown -R $NB_USER:$NB_GID /home/jovyan &&\
     /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
