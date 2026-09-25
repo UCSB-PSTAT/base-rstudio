@@ -58,7 +58,7 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
     git config --system filter.lfs.process "git-lfs filter-process" &&\
     Rscript -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', 'CC = gcc','FC = /usr/bin/gfortran', file = Makevars, sep = '\n', append = TRUE)"
 
-# Consolidate Conda Installations (Python + R Packages)
+# Consolidate Conda Installations (Python + R Packages plus any of their configs)
 RUN mamba install -y -c conda-forge --freeze-installed \
     imagemagick\
     "jupyter-ai=2.*"\
@@ -74,7 +74,11 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     r-pak &&\
     conda clean -afy &&\
     jupyter server extension enable --py nbgitpuller --sys-prefix &&\
-    Rscript -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan', 'ottr'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())" &&\
+    chown -R $NB_USER:$NB_GID /home/jovyan &&\
+    /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
+
+# Rscript Installs and Configs
+RUN Rscript -e "install.packages(c('usethis','covr','httr','roxygen2','rversions','imager','patchwork','littler', 'docopt','httr','WDI', 'faraway', 'boot', 'car', 'pscl', 'vcd', 'stargazer', 'effsize', 'Rmisc', 'tidyverse', 'brms', 'rstan', 'ottr'), repos = 'https://cloud.r-project.org/', Ncpus = parallel::detectCores())" &&\
     Rscript -e "pak::pak(c('bradleyboehmke/harrypotter', 'gbm-developers/gbm3'))" &&\
     Rscript -e "pak::cache_clean()" &&\
     rm -rf ~/.cache/R /root/.cache/R /tmp/Rtmp* &&\
