@@ -65,7 +65,7 @@ pipeline {
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME pip install otter-grader'
                             sh 'podman run -it --rm --pull=never localhost/$IMAGE_NAME jupyter labextension list | grep "@jupyter-ai" | grep "@jupyter-ai.*enabled.*OK"'
                             sh 'podman run -d --name=$IMAGE_NAME --rm --pull=never -p 8888:8888 localhost/$IMAGE_NAME start-notebook.sh --NotebookApp.token="jenkinstest"'
-                            sh 'sleep 10 && curl -v http://localhost:8888/rstudio?token=jenkinstest 2>&1 | grep -P "HTTP\\S+\\s[1-3][0-9][0-9]\\s+[\\w\\s]+\\s*$"'
+                            sh 'sleep 10 && curl -Lv -c /tmp/cookies.txt -b /tmp/cookies.txt "http://localhost:8888/rstudio?token=jenkinstest" 2>&1 | grep -P "HTTP\\S+\\s200\\s+[\\w\\s]+\\s*$"'
                             sh 'curl -v http://localhost:8888/lab?token=jenkinstest 2>&1 | grep -P "HTTP\\S+\\s200\\s+[\\w\\s]+\\s*$"'
                             sh 'curl -v http://localhost:8888/tree?token=jenkinstest 2>&1 | grep -P "HTTP\\S+\\s200\\s+[\\w\\s]+\\s*$"'
                         }
