@@ -4,7 +4,8 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION 2026.06.0-242
+ENV R_STUDIO_VERSION=2026.06.0-242 \
+    PIP_NO_CACHE_DIR=1
 
 # System installs and configs
 RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g' /etc/apt/sources.list.d/ubuntu.sources &&\
@@ -62,7 +63,7 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
 RUN mamba install -y -c conda-forge --freeze-installed \
     imagemagick\
     "jupyter-ai=2.*"\
-    jupyter-rsession-proxy\
+    #jupyter-rsession-proxy\ #Need to pip install from git to avoid 500 errors.
     jupyter-server-proxy\
     libwebp\
     matplotlib\
@@ -74,6 +75,11 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     r-pak &&\
     conda clean -afy &&\
     jupyter server extension enable --py nbgitpuller --sys-prefix &&\
+    chown -R $NB_USER:$NB_GID /home/jovyan &&\
+    /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
+
+# Python/PIP installs
+RUN conda run pip --no-cache-dir install git+https://github.com/jupyterhub/jupyter-rsession-proxy@main &&\
     chown -R $NB_USER:$NB_GID /home/jovyan &&\
     /usr/local/bin/fix-permissions "${CONDA_DIR}" || true
 
