@@ -66,6 +66,7 @@ RUN mamba install -y -c conda-forge --freeze-installed \
     "jupyter-ai=2.*"\
     #jupyter-rsession-proxy\ #Need to pip install from git to avoid 500 errors.
     jupyter-server-proxy\
+    langchain-openai\
     libwebp\
     matplotlib\
     nbgitpuller\
