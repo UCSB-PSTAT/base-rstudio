@@ -64,6 +64,7 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
 RUN mamba install -y -c conda-forge --freeze-installed \
     imagemagick\
     "jupyter-ai=2.*"\
+    jupyterlab-git\
     #jupyter-rsession-proxy\ #Need to pip install from git to avoid 500 errors.
     jupyter-server-proxy\
     langchain-openai\
