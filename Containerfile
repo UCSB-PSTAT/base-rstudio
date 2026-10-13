@@ -45,14 +45,17 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
     wget\
     x11-utils &&\
     ## Install/Config RStudio from source package
-    R_STUDIO_VERSION=$(curl https://api.github.com/repos/rstudio/rstudio/tags 2>/dev/null | jq -r '.[0].name' | sed 's,+,-,g;s,v,,g') && \
-    wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
+    R_STUDIO_VERSION=$(curl https://api.github.com/repos/rstudio/rstudio/tags 2>/dev/null | jq -r '.[0].name' | sed 's,+,-,g;s,v,,g') &&\
+    wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-${R_STUDIO_VERSION}-amd64.deb &&\
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb &&\
     apt install ./rstudio*.deb -yq &&\
     rm -f ./rstudio*.deb &&\
     chmod 777 /var/run/rstudio-server &&\
     chmod +t /var/run/rstudio-server &&\
     echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf &&\
+    mkdir -p /etc/rstudio/pai/ &&\
+    curl -fsSL https://assistant.posit.co/builds/install-tui.sh | INSTALL_DIR=/etc/rstudio/pai/ bash &&\
+    ln -s /etc/rstudio/pai/pa /usr/local/bin/pa &&\
     apt-get clean &&\
     ## Configure git lfs and R for all system users
     git config --system filter.lfs.clean "git-lfs clean -- %filter-replica" && \
