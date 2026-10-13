@@ -56,6 +56,9 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
     mkdir -p /etc/rstudio/pai/ &&\
     curl -fsSL https://assistant.posit.co/builds/install-tui.sh | INSTALL_DIR=/etc/rstudio/pai/ bash &&\
     ln -s /etc/rstudio/pai/pa /usr/local/bin/pa &&\
+    wget -O assistant.zip $(curl -fsSL https://cdn.posit.co/posit-ai/manifest.json | jq -r '.versions | to_entries | last | .value.url') &&\
+    unzip -oq assistant.zip -d /etc/rstudio/pai &&\
+    rm -f assistant.zip &&\
     apt-get clean &&\
     ## Configure git lfs and R for all system users
     git config --system filter.lfs.clean "git-lfs clean -- %filter-replica" && \
