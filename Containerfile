@@ -4,7 +4,7 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION=2026.06.0-242 \
+ENV R_STUDIO_VERSION=2026.10.1-239 \
     PIP_NO_CACHE_DIR=1
 
 # System installs and configs
