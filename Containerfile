@@ -5,9 +5,11 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 USER root
 
 ENV R_STUDIO_VERSION=2026.10.1-239 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    RSTUDIO_DISABLE_POSIT_ASSISTANT="true"
 
 # System installs and configs
+COPY install-posit-ai.sh /usr/local/bin/before-notebook.d/10-install-posit-ai.sh
 RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g' /etc/apt/sources.list.d/ubuntu.sources &&\
     apt update -qq &&\
     apt upgrade -y &&\
@@ -52,17 +54,6 @@ RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu
     chmod 777 /var/run/rstudio-server &&\
     chmod +t /var/run/rstudio-server &&\
     echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf &&\
-    mkdir -p /etc/rstudio/pai/bin &&\
-    curl -fsSL https://assistant.posit.co/builds/install-tui.sh | INSTALL_DIR=/etc/rstudio/pai/bin bash &&\
-    ln -s /etc/rstudio/pai/bin/pa /usr/local/bin/pa &&\
-    wget -O assistant.zip $(curl -fsSL https://cdn.posit.co/posit-ai/manifest.json | jq -r '.versions | to_entries | last | .value.url') &&\
-    mkdir -p /etc/rstudio/pai/versions/$(curl -fsSL https://cdn.posit.co/posit-ai/manifest.json | jq -r '.versions | to_entries | last | .value.version') &&\
-    unzip -oq assistant.zip -d /etc/rstudio/pai/versions/$(curl -fsSL https://cdn.posit.co/posit-ai/manifest.json | jq -r '.versions | to_entries | last | .value.version') &&\
-    rm -f assistant.zip &&\
-    # Install to /etc ensures that pai is available for all users as ~ is normally a mounted PVC in JupyterHub, but we symlink to ~ so that users can pickup the install without needing to re-install for non JHub users.
-    mkdir -p /home/jovyan/.local/share/rstudio/pai &&\
-    ln -s /etc/rstudio/pai/versions /home/jovyan/.local/share/rstudio/pai/ &&\
-    chown -R $NB_USER:$NB_GID /etc/rstudio/pai &&\
     apt-get clean &&\
     ## Configure git lfs and R for all system users
     git config --system filter.lfs.clean "git-lfs clean -- %filter-replica" && \
