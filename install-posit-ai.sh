@@ -11,7 +11,7 @@ else
         mkdir -p /home/jovyan/.local/share/rstudio/pai/bin
         curl -fsSL https://assistant.posit.co/builds/install-tui.sh | INSTALL_DIR=/home/jovyan/.local/share/rstudio/pai/bin bash
     fi
-    ln -sf /home/jovyan/.local/share/rstudio/pai/bin/pa /usr/local/bin/pa
+    ln -sf /home/jovyan/.local/share/rstudio/pai/bin/pa /opt/conda/bin/pa
     MANIFEST_JSON=$(curl -fsSL https://cdn.posit.co/posit-ai/manifest.json)
     PAI_URL=$(echo "$MANIFEST_JSON" | jq -r '.versions | to_entries | last | .value.url')
     PAI_VERSION=$(echo "$MANIFEST_JSON" | jq -r '.versions | to_entries | last | .value.version')
