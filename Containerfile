@@ -4,10 +4,12 @@ LABEL maintainer="LSIT Systems <lsitops@ucsb.edu>"
 
 USER root
 
-ENV R_STUDIO_VERSION=2026.06.0-242 \
-    PIP_NO_CACHE_DIR=1
+ENV R_STUDIO_VERSION=2026.10.1-239 \
+    PIP_NO_CACHE_DIR=1 \
+    RSTUDIO_DISABLE_POSIT_ASSISTANT="true"
 
 # System installs and configs
+COPY install-posit-ai.sh /usr/local/bin/before-notebook.d/10-install-posit-ai.sh
 RUN sed -i 's,URIs: http://archive.ubuntu.com/ubuntu/,URIs: https://ftp.ucsb.edu/ubuntu,g;s,Suites: noble noble-updates noble-backports,Suites: noble noble-updates noble-backports noble-security,g' /etc/apt/sources.list.d/ubuntu.sources &&\
     apt update -qq &&\
     apt upgrade -y &&\

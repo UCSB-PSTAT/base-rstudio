@@ -36,6 +36,9 @@ USER $NB_USER
 
 `v...` - The numbers in these tags represent a date and are effectively a snapshot of the `latest` tag as it was on that particular day.  
 
+## Posit Assistant (Posit AI) 
+In recent versions of RStudio, Posit, the corporate entity supporting the project, added a button to easily enable the Posit Assistant. This image contains a script that will download and enable the Assistant if you override the `RSTUDIO_DISABLE_POSIT_ASSISTANT` default setting of `true` with `false` (ie: `podman run -it --rm --pull=never -e RSTUDIO_DISABLE_POSIT_ASSISTANT="false" ucsb/rstudio-base:latest`) the image will download and enable the TUI and the Assistant binaries.
+
 
 ## Package List
 
