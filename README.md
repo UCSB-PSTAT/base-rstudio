@@ -28,6 +28,9 @@ RUN R -e "install.packages(c('<library>', '<library>'), repos = 'https://cloud.r
 USER $NB_USER
 ```
 
+## Posit Assistant (Posit AI) 
+In recent versions of RStudio, Posit, the corporate entity supporting the project, added a button to easily enable the Posit Assistant. This image contains a script that will download and enable the Assistant if you override the `RSTUDIO_DISABLE_POSIT_ASSISTANT` default setting of `true` with `false` (ie: `podman run -it --rm --pull=never -e RSTUDIO_DISABLE_POSIT_ASSISTANT="false" ucsb/rstudio-base:latest`) the image will download and enable the TUI and the Assistant binaries.
+
 ## Tags
 
 `latest` - Periodically a Jupyter release version is tagged in the Containerfile and this tags tracks the most recent build against that particular version.  That upstream version may get updated at least quarterly.  This image is built and tested at least weekly.
